@@ -1,4 +1,3 @@
 "# OS30" 
 
-
-Finish day0
+Day1:Begin
