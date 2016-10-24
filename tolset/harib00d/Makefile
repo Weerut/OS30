@@ -30,7 +30,7 @@ img :
 
 run :
 	$(MAKE) img
-	$(COPY) haribote.img ..\z_tools\qemu\fdimage0.bin
+	cmd /C $(COPY) haribote.img ..\z_tools\qemu\fdimage0.bin
 	$(MAKE) -C ../z_tools/qemu
 
 install :
@@ -38,9 +38,9 @@ install :
 	$(IMGTOL) w a: haribote.img
 
 clean :
-	-$(DEL) ipl.bin
-	-$(DEL) ipl.lst
+	cmd /C $(DEL) ipl.bin
+	cmd /C $(DEL) ipl.lst
 
 src_only :
 	$(MAKE) clean
-	-$(DEL) haribote.img
+	cmd /C $(DEL) haribote.img

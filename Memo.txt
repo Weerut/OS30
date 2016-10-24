@@ -1,0 +1,8 @@
+55AA at the end of first segment.
+F0FF at the start of segment 2(0x200) and 11(ox1400).
+
+program –{‘Ì‚Í0x50‚©‚ç
+
+IPL is first sector of disk and it is loaded located at [0x7c00 - 0x7e00) in memory
+in IPL
+	- it will load disk from C0-H0-S2 (0x0820) to C9-H1-S18 (0x2D620)

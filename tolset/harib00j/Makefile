@@ -11,7 +11,7 @@ RULEFILE = $(TOOLPATH)haribote/haribote.rul
 EDIMG    = $(TOOLPATH)edimg.exe
 IMGTOL   = $(TOOLPATH)imgtol.com
 COPY     = copy
-DEL      = del
+DEL      = rm -f
 
 # デフォルト動作
 
@@ -70,16 +70,19 @@ install :
 	$(IMGTOL) w a: haribote.img
 
 clean :
-	-$(DEL) *.bin
-	-$(DEL) *.lst
-	-$(DEL) *.gas
-	-$(DEL) *.obj
-	-$(DEL) bootpack.nas
-	-$(DEL) bootpack.map
-	-$(DEL) bootpack.bim
-	-$(DEL) bootpack.hrb
-	-$(DEL) haribote.sys
+	$(DEL) *.bin
+	$(DEL) *.lst
+	$(DEL) *.gas
+	$(DEL) *.obj
+	$(DEL) bootpack.nas
+	$(DEL) bootpack.map
+	$(DEL) bootpack.bim
+	$(DEL) bootpack.hrb
+	$(DEL) haribote.sys
 
 src_only :
-	$(MAKE) clean
-	-$(DEL) haribote.img
+	$(MAKE) -C clean
+	$(DEL) haribote.img
+	
+test:
+	$(DEL) *.lst
