@@ -81,7 +81,7 @@ clean :
 	$(DEL) haribote.sys
 
 src_only :
-	$(MAKE) -C clean
+	$(MAKE) clean
 	$(DEL) haribote.img
 	
 test:
