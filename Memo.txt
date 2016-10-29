@@ -9,5 +9,15 @@ in IPL
 
 GDT = 0x270000 - 0x27ffff
 IDT = 0x26f800 - 0x26ffff
-
 Bootpack = 0x280000 - 0x2fffff
+
+GDT（Global segment discripter table)=セグメントを定義するテーブルのメモリ上に保存する場所。
+このテーブルの先頭のアドレスをCPUのGDTRレジスタに保存されている。
+ここで場所を 0x270000-0x27ffff にする。
+
+IDT(Interupt Descriptor Table)は
+CPUが自動的に割込みが発生するときに、登録した関数を呼び出す。
+その割込み番号の０～２５５に対して読みだす関数を保存するテーブルだ。
+ここで場所を 0x26f800-0x26ffff にする。
+
+因みに、 0x280000-0x2fffffはBootpack.hrbが入る。
