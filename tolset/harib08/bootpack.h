@@ -9,8 +9,6 @@ struct BOOTINFO { /* 0x0ff0-0x0fff */
 };
 #define ADR_BOOTINFO	0x00000ff0
 
-
-
 /* naskfunc.nas */
 void io_hlt(void);
 void io_cli(void);
@@ -123,3 +121,41 @@ void inthandler2c(int *esp);
 void enable_mouse(struct MOUSE_DEC *mdec);
 int mouse_decode(struct MOUSE_DEC *mdec, unsigned char dat);
 extern struct FIFO8 mousefifo;
+
+/* memory.c */
+#define MEMMAN_FREES		4090	/* これで約32KB */
+#define MEMMAN_ADDR			0x003c0000
+struct FREEINFO {	/* あき情報 */
+	unsigned int addr, size; /* 中に空きメモリのその番地とサイズをキープ */
+};
+struct MEMMAN {		/* メモリ管理 */
+	int frees, maxfrees, lostsize, losts; /*　メモリ管理構造体の基本必要な情報　*/
+	struct FREEINFO free[MEMMAN_FREES]; /* 空きメモリ情報を保存する行列 */
+};
+unsigned int memtest(unsigned int start, unsigned int end); //　メモリチェックを準備する関数。具体的な準備作業のCPUアーキテクチャやCacheをDisable操作をしてから、メモリチャック関数本体（memtest_stub）を呼び出す。
+void memman_init(struct MEMMAN *man);
+unsigned int memman_total(struct MEMMAN *man);
+unsigned int memman_alloc(struct MEMMAN *man, unsigned int size);
+int memman_free(struct MEMMAN *man, unsigned int addr, unsigned int size);
+unsigned int memman_alloc_4k(struct MEMMAN *man, unsigned int size);
+int memman_free_4k(struct MEMMAN *man, unsigned int addr, unsigned int size);
+
+/* sheet.c */
+#define MAX_SHEETS		256
+struct SHEET {
+	unsigned char *buf;
+	int bxsize, bysize, vx0, vy0, col_inv, height, flags;
+};
+struct SHTCTL {
+	unsigned char *vram;
+	int xsize, ysize, top;
+	struct SHEET *sheets[MAX_SHEETS];
+	struct SHEET sheets0[MAX_SHEETS];
+};
+struct SHTCTL *shtctl_init(struct MEMMAN *memman, unsigned char *vram, int xsize, int ysize);
+struct SHEET *sheet_alloc(struct SHTCTL *ctl);
+void sheet_setbuf(struct SHEET *sht, unsigned char *buf, int xsize, int ysize, int col_inv);
+void sheet_updown(struct SHTCTL *ctl, struct SHEET *sht, int height);
+void sheet_refresh(struct SHTCTL *ctl, struct SHEET *sht, int bx0, int by0, int bx1, int by1);
+void sheet_slide(struct SHTCTL *ctl, struct SHEET *sht, int vx0, int vy0);
+void sheet_free(struct SHTCTL *ctl, struct SHEET *sht);
