@@ -119,7 +119,7 @@ _asm_inthandler20:
 		POP		DS
 		POP		ES
 		IRETD
-		
+
 _asm_inthandler21:
 		PUSH	ES
 		PUSH	DS
