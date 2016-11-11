@@ -112,7 +112,7 @@ void inthandler27(int *esp);
 /* keyboard.c */
 void inthandler21(int *esp);
 void wait_KBC_sendready(void);
-void init_keyboard(struct FIFO32 *fifo, int data0);
+void init_keyboard(struct FIFO32 *fifo, int data0); /*キー入力があれば、初期値 data0 + 入力値でfifoに代入する。*/
 #define PORT_KEYDAT		0x0060
 #define PORT_KEYCMD		0x0064
 
@@ -122,20 +122,20 @@ struct MOUSE_DEC {
 	int x, y, btn;
 };
 void inthandler2c(int *esp);
-void enable_mouse(struct FIFO32 *fifo, int data0, struct MOUSE_DEC *mdec);
+void enable_mouse(struct FIFO32 *fifo, int data0, struct MOUSE_DEC *mdec);/*キー入力があれば、初期値 data0 + 入力値でfifoに代入する。mdexはマウス状態を表す構造体である。*/
 int mouse_decode(struct MOUSE_DEC *mdec, unsigned char dat);
 
 /* memory.c */
 #define MEMMAN_FREES		4090	/* これで約32KB */
 #define MEMMAN_ADDR			0x003c0000
 struct FREEINFO {	/* あき情報 */
-	unsigned int addr, size;
+	unsigned int addr, size; /* 中に空きメモリのその番地とサイズをキープ */
 };
 struct MEMMAN {		/* メモリ管理 */
-	int frees, maxfrees, lostsize, losts;
-	struct FREEINFO free[MEMMAN_FREES];
+	int frees, maxfrees, lostsize, losts; /*　メモリ管理構造体の基本必要な情報　*/
+	struct FREEINFO free[MEMMAN_FREES]; /* 空きメモリ情報を保存する行列 */
 };
-unsigned int memtest(unsigned int start, unsigned int end);
+unsigned int memtest(unsigned int start, unsigned int end); //　メモリチェックを準備する関数。具体的な準備作業のCPUアーキテクチャやCacheをDisable操作をしてから、メモリチャック関数本体（memtest_stub）を呼び出す。
 void memman_init(struct MEMMAN *man);
 unsigned int memman_total(struct MEMMAN *man);
 unsigned int memman_alloc(struct MEMMAN *man, unsigned int size);
@@ -188,35 +188,38 @@ void inthandler20(int *esp);
 /* mtask.c */
 #define MAX_TASKS		1000	/* 最大タスク数 */
 #define TASK_GDT0		3		/* TSSをGDTの何番から割り当てるのか */
-#define MAX_TASKS_LV	100
-#define MAX_TASKLEVELS	10
+#define MAX_TASKS_LV	100		/* レベル当たりのタスク */
+#define MAX_TASKLEVELS	10		/* 分けたタスクをレベルの数 */
 struct TSS32 {
 	int backlink, esp0, ss0, esp1, ss1, esp2, ss2, cr3;
 	int eip, eflags, eax, ecx, edx, ebx, esp, ebp, esi, edi;
 	int es, cs, ss, ds, fs, gs;
 	int ldtr, iomap;
 };
+
 struct TASK {
-	int sel, flags; /* selはGDTの番号のこと */
+	int sel, flags; /* selはGDTの番号のこと flagsは１：休止中、２：動作中。*/
 	int level, priority;
-	struct FIFO32 fifo;
+	struct FIFO32 fifo; 
 	struct TSS32 tss;
 };
+
 struct TASKLEVEL {
 	int running; /* 動作しているタスクの数 */
 	int now; /* 現在動作しているタスクがどれだか分かるようにするための変数 */
-	struct TASK *tasks[MAX_TASKS_LV];
+	struct TASK *tasks[MAX_TASKS_LV]; /* 一つのレベルに付き100タスク存在*/
 };
+
 struct TASKCTL {
 	int now_lv; /* 現在動作中のレベル */
 	char lv_change; /* 次回タスクスイッチのときに、レベルも変えたほうがいいかどうか */
-	struct TASKLEVEL level[MAX_TASKLEVELS];
+	struct TASKLEVEL level[MAX_TASKLEVELS];/* 全部１０レベルで管理する。 */
 	struct TASK tasks0[MAX_TASKS];
 };
+
 extern struct TIMER *task_timer;
-struct TASK *task_now(void);
-struct TASK *task_init(struct MEMMAN *memman);
-struct TASK *task_alloc(void);
-void task_run(struct TASK *task, int level, int priority);
-void task_switch(void);
-void task_sleep(struct TASK *task);
+struct TASK *task_init(struct MEMMAN *memman); //　実行中をタスクとして設定および各初期設定が行われる。
+struct TASK *task_alloc(void);//　タスクのメモリを割当
+void task_run(struct TASK *task, int level, int priority);//　タスクを実行させる。
+void task_switch(void);//タスクの切り替えを行う
+void task_sleep(struct TASK *task);//タスクを休止させる。
