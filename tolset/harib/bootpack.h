@@ -8,6 +8,7 @@ struct BOOTINFO { /* 0x0ff0-0x0fff */
 	char *vram;
 };
 #define ADR_BOOTINFO	0x00000ff0
+#define ADR_DISKIMG		0x00100000
 
 /* naskfunc.nas */
 void io_hlt(void);
@@ -196,28 +197,25 @@ struct TSS32 {
 	int es, cs, ss, ds, fs, gs;
 	int ldtr, iomap;
 };
-
 struct TASK {
 	int sel, flags; /* selはGDTの番号のこと flagsは１：休止中、２：動作中。*/
 	int level, priority;
-	struct FIFO32 fifo; 
+	struct FIFO32 fifo;
 	struct TSS32 tss;
 };
-
 struct TASKLEVEL {
 	int running; /* 動作しているタスクの数 */
 	int now; /* 現在動作しているタスクがどれだか分かるようにするための変数 */
 	struct TASK *tasks[MAX_TASKS_LV]; /* 一つのレベルに付き100タスク存在*/
 };
-
 struct TASKCTL {
 	int now_lv; /* 現在動作中のレベル */
 	char lv_change; /* 次回タスクスイッチのときに、レベルも変えたほうがいいかどうか */
 	struct TASKLEVEL level[MAX_TASKLEVELS];/* 全部１０レベルで管理する。 */
 	struct TASK tasks0[MAX_TASKS];
 };
-
 extern struct TIMER *task_timer;
+struct TASK *task_now(void);
 struct TASK *task_init(struct MEMMAN *memman); //　実行中をタスクとして設定および各初期設定が行われる。
 struct TASK *task_alloc(void);//　タスクのメモリを割当
 void task_run(struct TASK *task, int level, int priority);//　タスクを実行させる。
