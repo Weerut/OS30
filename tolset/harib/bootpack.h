@@ -228,8 +228,20 @@ void putfonts8_asc_sht(struct SHEET *sht, int x, int y, int c, int b, char *s, i
 void make_textbox8(struct SHEET *sht, int x0, int y0, int sx, int sy, int c);
 void make_wtitle8(unsigned char *buf, int xsize, char *title, char act);
 /* console.c */
+struct CONSOLE {
+	struct SHEET *sht;
+	int cur_x, cur_y, cur_c;
+};
 void console_task(struct SHEET *sheet, unsigned int memtotal);
+void cons_putchar(struct CONSOLE *cons, int chr, char move);
 int cons_newline(int cursor_y, struct SHEET *sheet); /*改行し、スクロールする関数*/
+void cons_runcmd(char *cmdline, struct CONSOLE *cons, int *fat, unsigned int memtotal);
+void cmd_mem(struct CONSOLE *cons, unsigned int memtotal);
+void cmd_cls(struct CONSOLE *cons);
+void cmd_dir(struct CONSOLE *cons);
+void cmd_type(struct CONSOLE *cons, int *fat, char *cmdline);
+void cmd_hlt(struct CONSOLE *cons, int *fat);
+
 /* file.c */
 struct FILEINFO {
 	unsigned char name[8], ext[3], type;
@@ -239,3 +251,4 @@ struct FILEINFO {
 };
 void file_readfat(int *fat, unsigned char *img);/*ImgのChar行列からFAT形式を解読して、fat行列に保存する、*/
 void file_loadfile(int clustno, int size, char *buf, int *fat, char *img);
+struct FILEINFO *file_search(char *name, struct FILEINFO *finfo, int max);
