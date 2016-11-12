@@ -46,19 +46,23 @@ bootpack.bim : $(OBJS_BOOTPACK) Makefile
 bootpack.hrb : bootpack.bim Makefile
 	$(BIM2HRB) bootpack.bim bootpack.hrb 0
 
-hlt.hrb : hlt.nas Makefile
-	$(NASK) hlt.nas hlt.hrb hlt.lst
+hello.hrb : hello.nas Makefile
+	$(NASK) hello.nas hello.hrb hello.lst
+
+hello2.hrb : hello2.nas Makefile
+	$(NASK) hello2.nas hello2.hrb hello2.lst
 
 haribote.sys : asmhead.bin bootpack.hrb Makefile
 	cmd /C copy /B asmhead.bin+bootpack.hrb haribote.sys
 
-haribote.img : ipl10.bin haribote.sys hlt.hrb Makefile
+haribote.img : ipl10.bin haribote.sys hello.hrb hello2.hrb Makefile
 	$(EDIMG)   imgin:../z_tools/fdimg0at.tek \
 		wbinimg src:ipl10.bin len:512 from:0 to:0 \
 		copy from:haribote.sys to:@: \
 		copy from:ipl10.nas to:@: \
 		copy from:MyFile.txt to:@: \
-		copy from:hlt.hrb to:@: \
+		copy from:hello.hrb to:@: \
+		copy from:hello2.hrb to:@: \
 		imgout:haribote.img
 
 # ˆê”Ê‹K‘¥
@@ -92,13 +96,12 @@ clean :
 	-$(DEL) *.gas
 	-$(DEL) *.obj
 	-$(DEL) *.bat
+	-$(DEL) *.map
+	-$(DEL) *.bim
+	-$(DEL) *.sys
 	-$(DEL) bootpack.nas
 	-$(DEL) graphic.nas
 	-$(DEL) dsctbl.nas
-	-$(DEL) bootpack.map
-	-$(DEL) bootpack.bim
-	-$(DEL) bootpack.hrb
-	-$(DEL) haribote.sys
 
 src_only :
 	$(MAKE) clean
