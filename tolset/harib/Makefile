@@ -92,7 +92,6 @@ clean :
 	-$(DEL) *.gas
 	-$(DEL) *.obj
 	-$(DEL) *.bat
-	-$(DEL) *.hrb
 	-$(DEL) bootpack.nas
 	-$(DEL) graphic.nas
 	-$(DEL) dsctbl.nas
@@ -104,3 +103,4 @@ clean :
 src_only :
 	$(MAKE) clean
 	-$(DEL) haribote.img
+	-$(DEL) *.hrb

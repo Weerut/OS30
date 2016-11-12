@@ -234,7 +234,7 @@ struct CONSOLE {
 };
 void console_task(struct SHEET *sheet, unsigned int memtotal);
 void cons_putchar(struct CONSOLE *cons, int chr, char move);
-int cons_newline(int cursor_y, struct SHEET *sheet); /*改行し、スクロールする関数*/
+void cons_newline(struct CONSOLE *cons); /*改行し、スクロールする関数*/
 void cons_runcmd(char *cmdline, struct CONSOLE *cons, int *fat, unsigned int memtotal);
 void cmd_mem(struct CONSOLE *cons, unsigned int memtotal);
 void cmd_cls(struct CONSOLE *cons);
@@ -252,3 +252,4 @@ struct FILEINFO {
 void file_readfat(int *fat, unsigned char *img);/*ImgのChar行列からFAT形式を解読して、fat行列に保存する、*/
 void file_loadfile(int clustno, int size, char *buf, int *fat, char *img);
 struct FILEINFO *file_search(char *name, struct FILEINFO *finfo, int max);
+
