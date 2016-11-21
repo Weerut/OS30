@@ -380,11 +380,11 @@ _farcall:		; void farcall(int eip, int cs);
 		CALL	FAR	[ESP+4]				; eip, cs
 		RET
 
-_asm_hrb_api:
+_asm_hrb_api:  ; 割込みから発生した関数 
 		; 都合のいいことに最初から割り込み禁止になっている
 		PUSH	DS
 		PUSH	ES
-		PUSHAD		; 保存のためのPUSH
+		PUSHAD		; 保存のためのPUSH. Push EAX, ECX, EDX, EBX, ESP, EBP, ESI,EDI
 		MOV		EAX,1*8
 		MOV		DS,AX			; とりあえずDSだけOS用にする
 		MOV		ECX,[0xfe4]		; OSのESP
@@ -411,11 +411,11 @@ _asm_hrb_api:
 		MOV		[ECX+28],EBX	; hrb_apiに渡すためコピー
 
 		MOV		ES,AX			; 残りのセグメントレジスタもOS用にする
-		MOV		SS,AX
+		MOV		SS,AX			; 残りのセグメントレジスタもOS用にする
 		MOV		ESP,ECX
 		STI			; やっと割り込み許可
 
-		CALL	_hrb_api
+		CALL	_hrb_api ; void hrb_api(int edi, int esi, int ebp, int esp, int ebx, int edx, int ecx, int eax)
 
 		MOV		ECX,[ESP+32]	; アプリのESPを思い出す
 		MOV		EAX,[ESP+36]	; アプリのSSを思い出す

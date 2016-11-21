@@ -3,14 +3,13 @@
 		Data register　
 			演算用のレジスタ。EAX, EBX, ECX, EDX
 		Pointer register
-			EIP（Instruction Pointer）　次の命令の相対的なアドレス番地を保存。CSと合わせて、絶対的な番地に計算できる。
 			ESP（Stack Pointer）　スタックの相対的なアドレス番地を保存。SSと合わせ、絶対的な番地を計算できる。
 			EBP（Base Pointer）　
 		Index register
-			SI（Source Index）
-			DI（Destination Index）
+			ESI（Source Index）
+			EDI（Destination Index）
 	Control register
-		EIP（PointerRegisterに分類されたと同じもの）
+		EIP（Instruction Pointer）　次の命令の相対的なアドレス番地を保存。CSと合わせて、絶対的な番地に計算できる。
 		Flags 
 			OF(Overflow Flag) オーバーフローがあるかを示す。
 			DF(Direction Flag) − 文字列比較・移動する際の方向を示す。０：左から右。１：右から左。
