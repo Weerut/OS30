@@ -24,5 +24,6 @@
 		CS(Code Segment)　コードセグメントの最初番地を保存。
 		DS(Data Segment)　データセグメントの最初番地を保存。
 		SS(Stack Segment)　スタックの最初番地を保存。
-		ES、FS、GSは特別レジスタとしてデータセグメントデータのデータ保存に利用,
+		ES(Extra Segment) 基本DSと同じだが、DS以外必要なものがあるときに、使われます。
+		FS(F Segment),GS(G Segment)は特別レジスタ。OSが使い道を決めている。
 
