@@ -259,7 +259,7 @@ int cmd_app(struct CONSOLE *cons, int *fat, char *cmdline)
 	struct SEGMENT_DESCRIPTOR *gdt = (struct SEGMENT_DESCRIPTOR *) ADR_GDT;
 	char name[18], *p, *q;
 	struct TASK *task = task_now();
-	int i;
+	int i, segsiz, datsiz, esp, dathrb;
 
 	/* コマンドラインからファイル名を生成 */
 	for (i = 0; i < 13; i++) {
