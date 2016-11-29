@@ -17,6 +17,11 @@ void HariMain(void)
 		api_linewin(win + 1,  8, 26, 77, i * 9 + 26, i);
 		api_linewin(win + 1, 88, 26, i * 9 + 88, 89, i);
 	}
+	for (;;) {
+		if (api_getkey(1) == 0x0a) {
+			break; /* Enterならbreak; */
+		}
+	}
 	api_refreshwin(win,  6, 26, 154, 90);
 	api_closewin(win);
 	api_end();
