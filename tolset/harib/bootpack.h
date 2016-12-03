@@ -155,6 +155,7 @@ int memman_free_4k(struct MEMMAN *man, unsigned int addr, unsigned int size);
 struct SHEET {
 	unsigned char *buf;
 	int bxsize, bysize, vx0, vy0, col_inv, height, flags;
+	/* flagsの値（３２Bit）。0x20（00010000）：Consoleの有無、0x10（00001000）アプリから作成か*/
 	struct SHTCTL *ctl;
 	struct TASK *task;
 };
@@ -176,7 +177,7 @@ void sheet_free(struct SHEET *sht);
 #define MAX_TIMER		500
 struct TIMER {
 	struct TIMER *next;
-	unsigned int timeout, flags;
+	unsigned int timeout, flags, flags2; // flagsはアプリが終了するとき、タイマーも自動的に終了するか。１：する、０：しない。
 	struct FIFO32 *fifo;
 	int data;
 };
@@ -234,7 +235,7 @@ void make_window8(unsigned char *buf, int xsize, int ysize, char *title, char ac
 void putfonts8_asc_sht(struct SHEET *sht, int x, int y, int c, int b, char *s, int l);
 void make_textbox8(struct SHEET *sht, int x0, int y0, int sx, int sy, int c);
 void make_wtitle8(unsigned char *buf, int xsize, char *title, char act);
-
+void change_wtitle8(struct SHEET *sht, char act);
 /* console.c */
 struct CONSOLE {
 	struct SHEET *sht;
