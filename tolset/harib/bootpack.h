@@ -212,7 +212,7 @@ struct TASK {
 	struct FIFO32 fifo;
 	struct TSS32 tss;
 	struct CONSOLE *cons; /*APIから呼び出されるときに、出力のコンソールがわかるようにここにコンソールへのポイントを保存させる。*/
-	int ds_base;
+	int ds_base, cons_stack;
 };
 struct TASKLEVEL {
 	int running; /* 動作しているタスクの数 */
@@ -225,6 +225,7 @@ struct TASKCTL {
 	struct TASKLEVEL level[MAX_TASKLEVELS];/* 全部１０レベルで管理する。 */
 	struct TASK tasks0[MAX_TASKS];
 };
+extern struct TASKCTL *taskctl;
 extern struct TIMER *task_timer;
 struct TASK *task_now(void);
 struct TASK *task_init(struct MEMMAN *memman); //　実行中をタスクとして設定および各初期設定が行われる。
@@ -256,6 +257,9 @@ void cmd_mem(struct CONSOLE *cons, int memtotal);
 void cmd_cls(struct CONSOLE *cons);
 void cmd_dir(struct CONSOLE *cons);
 void cmd_type(struct CONSOLE *cons, int *fat, char *cmdline);
+void cmd_exit(struct CONSOLE *cons, int *fat);
+void cmd_start(struct CONSOLE *cons, char *cmdline, int memtotal);
+void cmd_ncst(struct CONSOLE *cons, char *cmdline, int memtotal);
 int cmd_app(struct CONSOLE *cons, int *fat, char *cmdline);
 int *hrb_api(int edi, int esi, int ebp, int esp, int ebx, int edx, int ecx, int eax);
 int *inthandler0d(int *esp);
@@ -273,3 +277,6 @@ void file_readfat(int *fat, unsigned char *img);/*ImgのChar行列からFAT形式を解読
 void file_loadfile(int clustno, int size, char *buf, int *fat, char *img);
 struct FILEINFO *file_search(char *name, struct FILEINFO *finfo, int max);
 
+/* bootpack.c */
+struct TASK *open_constask(struct SHEET *sht, unsigned int memtotal);
+struct SHEET *open_console(struct SHTCTL *shtctl, unsigned int memtotal);
