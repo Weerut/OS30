@@ -287,6 +287,11 @@ struct FILEINFO {
 void file_readfat(int *fat, unsigned char *img);/*ImgのChar行列からFAT形式を解読して、fat行列に保存する、*/
 void file_loadfile(int clustno, int size, char *buf, int *fat, char *img);
 struct FILEINFO *file_search(char *name, struct FILEINFO *finfo, int max);
+char *file_loadfile2(int clustno, int *psize, int *fat);
+
+/* tek.c */
+int tek_getsize(unsigned char *p);
+int tek_decomp(unsigned char *p, char *q, int size);
 
 /* bootpack.c */
 struct TASK *open_constask(struct SHEET *sht, unsigned int memtotal);
