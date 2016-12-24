@@ -22,7 +22,7 @@ haribote.img : haribote/ipl20.bin haribote/haribote.sys Makefile \
 		beepdown/beepdown.hrb color/color.hrb color2/color2.hrb \
 		sosu/sosu.hrb sosu2/sosu2.hrb sosu3/sosu3.hrb \
 		typeipl/typeipl.hrb type/type.hrb iroha/iroha.hrb \
-		chklang/chklang.hrb nihongo/japanese.txt
+		chklang/chklang.hrb
 	$(EDIMG)   imgin:../z_tools/fdimg0at.tek \
 		wbinimg src:haribote/ipl20.bin len:512 from:0 to:0 \
 		copy from:haribote/haribote.sys to:@: \
@@ -52,7 +52,6 @@ haribote.img : haribote/ipl20.bin haribote/haribote.sys Makefile \
 		copy from:chklang/chklang.hrb to:@: \
 		copy from:euc.txt to:@: \
 		copy from:nihongo/nihongo.fnt to:@: \
-		copy from:nihongo/japanese.txt to:@: \
 		imgout:haribote.img
 
 # ƒRƒ}ƒ“ƒh
