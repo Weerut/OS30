@@ -215,6 +215,8 @@ struct TASK {
 	struct SEGMENT_DESCRIPTOR ldt[2];
 	struct CONSOLE *cons; /*APIから呼び出されるときに、出力のコンソールがわかるようにここにコンソールへのポイントを保存させる。*/
 	int ds_base, cons_stack;
+	struct FILEHANDLE *fhandle;
+	int *fat;
 };
 struct TASKLEVEL {
 	int running; /* 動作しているタスクの数 */
@@ -248,6 +250,11 @@ struct CONSOLE {
 	struct SHEET *sht;
 	int cur_x, cur_y, cur_c;
 	struct TIMER *timer;
+};
+struct FILEHANDLE {
+	char *buf;
+	int size;
+	int pos;
 };
 void console_task(struct SHEET *sheet, int memtotal);
 void cons_putchar(struct CONSOLE *cons, int chr, char move);
